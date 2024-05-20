@@ -1,13 +1,21 @@
 ﻿@model IEnumerable<PetTravelDb.Models.Flights>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Flights";
 }
 
-<h1>Index</h1>
+<h1>Flights</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
+
+    <form asp-controller="Flights" asp-action="Index">
+        <p>
+            Search by First Name: &nbsp; <input type="text" name="searchFlight" />
+            <input type="submit" value="Filter" />
+        </p>
+    </form>
+
 </p>
 <table class="table">
     <thead>

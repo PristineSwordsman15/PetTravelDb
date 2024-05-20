@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using PetTravelDb.Data;
 using PetTravelDb.Models;
 
+
+
 namespace PetTravelDb.Controllers
 {
     public class FlightsController : Controller
@@ -20,8 +22,17 @@ namespace PetTravelDb.Controllers
         }
 
         // GET: Flights
-        public async Task<IActionResult> Index()
-        {
+        public async Task<IActionResult> Index(string.searchFlight)
+
+
+     {
+            var flightSearch = from s in _context.Flights
+                               select s;
+            if (!String.IsNullOrEmpty(flightSearch))
+            {
+                flightSearch = flightSearch.Where(s => s.Destination.Contains(searchFlight)
+            }
+
             return View(await _context.Flights.ToListAsync());
         }
 

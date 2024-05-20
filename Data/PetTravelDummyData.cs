@@ -28,6 +28,7 @@ namespace PetTravelDb.Data
 
     };
                 ApplicationDbContext.Pet.AddRange(pets);
+                ApplicationDbContext.SaveChanges();
         }
             }
         }
