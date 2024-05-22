@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using PetTravelDb.Data;
 using PetTravelDb.Models;
 
@@ -22,19 +23,22 @@ namespace PetTravelDb.Controllers
         }
 
         // GET: Flights
-        public async Task<IActionResult> Index(string.searchFlight)
+        public async Task<IActionResult> Index(string searchFlight)
+        {
 
-
-     {
             var flightSearch = from s in _context.Flights
                                select s;
-            if (!String.IsNullOrEmpty(flightSearch))
+            if (!String.IsNullOrEmpty(searchFlight))
             {
-                flightSearch = flightSearch.Where(s => s.Destination.Contains(searchFlight)
+                flightSearch = flightSearch.Where(s => s.Destination.Contains(searchFlight));   
             }
 
             return View(await _context.Flights.ToListAsync());
         }
+
+
+     
+        
 
         // GET: Flights/Details/5
         public async Task<IActionResult> Details(int? id)
