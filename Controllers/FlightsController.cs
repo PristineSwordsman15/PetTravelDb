@@ -30,7 +30,7 @@ namespace PetTravelDb.Controllers
                                select s;
             if (!String.IsNullOrEmpty(searchFlight))
             {
-                flightSearch = flightSearch.Where(s => s.Destination.Contains(searchFlight));   
+                flightSearch = flightSearch.Where(s => s.BookingRefNo.Equals(searchFlight));   
             }
 
             return View(await _context.Flights.ToListAsync());
