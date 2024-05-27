@@ -20,10 +20,20 @@ namespace PetTravelDb.Controllers
         }
 
         // GET: Pets
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchPet)
         {
+
+            var petSearch = from s in _context.Flights
+                               select s;
+            if (!String.IsNullOrEmpty(searchPet))
+            {
+                petSearch = petSearch.Where(s => s.Destination.Contains(searchPet));
+            }
+
             return View(await _context.Pet.ToListAsync());
         }
+
+
 
         // GET: Pets/Details/5
         public async Task<IActionResult> Details(int? id)

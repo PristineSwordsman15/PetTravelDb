@@ -20,12 +20,22 @@ namespace PetTravelDb.Controllers
         }
 
         // GET: Owners
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchOwner)
         {
+
+            var ownerSearch = from s in _context.Owner
+                              select s;
+            if (!String.IsNullOrEmpty(searchOwner))
+            {
+                ownerSearch = ownerSearch.Where(s => s.LastName.Contains(searchOwner));
+            }
+
             return View(await _context.Owner.ToListAsync());
         }
 
+
         // GET: Owners/Details/5
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -43,6 +53,7 @@ namespace PetTravelDb.Controllers
             return View(owner);
         }
 
+
         // GET: Owners/Create
         public IActionResult Create()
         {
@@ -56,8 +67,7 @@ namespace PetTravelDb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("OwnerID,FirstName,LastName,FlightID,PhoneNumber,BookingRefNo,EmailAddress,Age")] Owner owner)
         {
-            if (ModelState.IsValid)
-            {
+            if (ModelState.IsValid) {
                 _context.Add(owner);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

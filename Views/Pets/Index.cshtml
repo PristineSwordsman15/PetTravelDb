@@ -5,6 +5,16 @@
 }
 
 <h1>Pets</h1>
+<p>
+    <a asp-action="Create">Create New</a>
+
+    <form asp-controller="Pets" asp-action="Index">
+        <p>
+            Search by : &nbsp; <input type="text" name="searchFlight" />
+            <input type="submit" value="Filter" />
+        </p>
+    </form>
+<p>
 
 <p>
     <a asp-action="Create">Create New</a>

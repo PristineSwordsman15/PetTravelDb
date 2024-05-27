@@ -8,6 +8,15 @@
 
 <p>
     <a asp-action="Create">Create New</a>
+
+    <form asp-controller="Owners" asp-action="Index">
+        <p>
+            Search by Last Name: &nbsp; <input type="text" name="searchFlight" />
+            <input type="submit" value="Filter" />
+        </p>
+    </form>
+<p>
+    <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
