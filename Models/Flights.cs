@@ -10,6 +10,7 @@ namespace PetTravelDb.Models
         public int AnimalID { get; set; }
         public string AnimalName { get; set; }
         public int BookingRefNo { get; set; }
+        public string Status { get; set; }                                                                                                         
 
     }
 }
