@@ -13,5 +13,6 @@ namespace PetTravelDb.Data
         public DbSet<PetTravelDb.Models.Pet> Pet { get; set; } = default!;
         public DbSet<PetTravelDb.Models.Owner> Owner { get; set; } = default!;
         public DbSet<PetTravelDb.Models.Flights> Flights { get; set; } = default!;
+        public DbSet<PetTravelDb.Models.Airlines> Airlines { get; set; } = default!;
     }
 }
