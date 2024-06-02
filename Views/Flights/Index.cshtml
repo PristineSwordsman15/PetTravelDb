@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<PetTravelDb.Models.Flights>
-
+<div style="background-color: ghostwhite; backface-visibility: 10%">
 @{
     ViewData["Title"] = "Flights";
 }
@@ -17,6 +17,7 @@
     </form>
 
 </p>
+
 <table class="table">
     <thead>
         <tr>
@@ -34,6 +35,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.BookingRefNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
             </th>
             <th></th>
         </tr>
@@ -65,3 +69,4 @@
 }
     </tbody>
 </table>
+</div>
