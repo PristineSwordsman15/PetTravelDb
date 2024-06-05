@@ -2,7 +2,8 @@ html {
   font-size: 14px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 768px) 
+@media (max-height:760px) {
   html {
     font-size: 16px;
   }
@@ -27,4 +28,4 @@ html {
 body {
     background-image: url('images/960x0.webp');
     </style > margin-bottom: 60px;
-}
+    

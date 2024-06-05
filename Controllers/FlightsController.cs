@@ -23,22 +23,26 @@ namespace PetTravelDb.Controllers
         }
 
         // GET: Flights
-        public async Task<IActionResult> Index(string searchFlight)
+        public async Task<IActionResult> Index()
         {
+           
 
             var flightSearch = from s in _context.Flights
                                select s;
-            if (!String.IsNullOrEmpty(searchFlight))
-            {
-                flightSearch = flightSearch.Where(s => s.BookingRefNo.Equals(searchFlight));   
-            }
+             
+           
 
-            return View(await _context.Flights.ToListAsync());
+            return View(await flightSearch.ToListAsync());
+        }
+        public async Task<IActionResult> FlightSearch(int Flight) 
+        {
+            var searchFlight = _context.Flights.Where(F => F.BookingRefNo == Flight);
+            return View("Index", await searchFlight.ToListAsync());
         }
 
 
-     
-        
+
+
 
         // GET: Flights/Details/5
         public async Task<IActionResult> Details(int? id)

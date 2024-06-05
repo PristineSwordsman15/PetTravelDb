@@ -8,12 +8,17 @@
 
 <p>
     <a asp-action="Create">Create New</a>
+</p>
+    <form asp-action="FlightSearch"asp-controller="Flights">
+      
 
-    <form asp-controller="Flights" asp-action="Index">
-        <p>
-            Search by BookingRefNo: &nbsp; <input type="text" name="searchFlight" />
+        
+        
+            Search by BookingRefNo: &nbsp; 
+            <input type="text" name="Flight" />
             <input type="submit" value="Filter" />
-        </p>
+        
+        
     </form>
 
 </p>
