@@ -22,9 +22,20 @@ namespace PetTravelDb.Controllers
         // GET: Airlines
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Airlines.ToListAsync());
-        }
 
+
+            var AirlineSearch = from s in _context.Airlines
+                               select s;
+
+
+
+            return View(await AirlineSearch.ToListAsync());
+        }
+        public async Task<IActionResult> AirlineSearch(string AirlinesName)
+        {
+            var Airliner = _context.Airlines.Where(F => F.AirlinesName == AirlinesName);
+            return View("Index", await Airliner.ToListAsync());
+        }
         // GET: Airlines/Details/5
         public async Task<IActionResult> Details(int? id)
         {

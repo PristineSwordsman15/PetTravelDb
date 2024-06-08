@@ -45,7 +45,7 @@ namespace PetTravelDb.Controllers
 
 
         // GET: Flights/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
             if (id == null)
             {
