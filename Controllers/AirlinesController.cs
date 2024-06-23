@@ -20,22 +20,43 @@ namespace PetTravelDb.Controllers
         }
 
         // GET: Airlines
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
 
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["CurrentFilter"] = searchString;
 
             var AirlineSearch = from s in _context.Airlines
                                select s;
 
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                AirlineSearch = AirlineSearch.Where(s => s.AirlinesName.Contains(searchString));
+            }
+                                                   
 
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    AirlineSearch= AirlineSearch.OrderByDescending(s => s.AirlinesName);
+                    break;
+                case "AirlineID":
+                    AirlineSearch = AirlineSearch.OrderBy(s => s.AirlinesDescription);
+                    break;
+                case "date_desc":
+                    AirlineSearch = AirlineSearch.OrderByDescending(s => s.AirlinesId);
+                    break;
 
-            return View(await AirlineSearch.ToListAsync());
+  
+
+                    
+              
+            }
+
+            return View(await AirlineSearch.AsNoTracking().ToListAsync());
         }
-        public async Task<IActionResult> AirlineSearch(string AirlinesName)
-        {
-            var Airliner = _context.Airlines.Where(F => F.AirlinesName == AirlinesName);
-            return View("Index", await Airliner.ToListAsync());
-        }
+      
         // GET: Airlines/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -67,7 +88,7 @@ namespace PetTravelDb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AirlinesId,AirlinesName,AirlinesDescription")] Airlines airlines)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 _context.Add(airlines);
                 await _context.SaveChangesAsync();

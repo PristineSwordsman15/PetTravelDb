@@ -5,37 +5,27 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using PetTravelDb.Models;
 using PetTravelDb.Data;
+using PetTravelDb.Models;
 
 namespace PetTravelDb.Controllers
 {
-    public class OwnersController : Controller
+    public class BookingController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public OwnersController(ApplicationDbContext context)
+        public BookingController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Owners
-        public async Task<IActionResult> Index(string searchOwner)
+        // GET: Booking
+        public async Task<IActionResult> Index()
         {
-
-            var ownerSearch = from s in _context.Owner
-                              select s;
-            if (!String.IsNullOrEmpty(searchOwner))
-            {
-                ownerSearch = ownerSearch.Where(s => s.LastName.Equals(searchOwner));
-            }
-
-            return View(await _context.Owner.ToListAsync());
+            return View(await _context.BookingProcess.ToListAsync());
         }
 
-
-        // GET: Owners/Details/5
-
+        // GET: Booking/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -43,39 +33,39 @@ namespace PetTravelDb.Controllers
                 return NotFound();
             }
 
-            var owner = await _context.Owner
-                .FirstOrDefaultAsync(m => m.OwnerID == id);
-            if (owner == null)
+            var bookingProcess = await _context.BookingProcess
+                .FirstOrDefaultAsync(m => m.BookingProcessID == id);
+            if (bookingProcess == null)
             {
                 return NotFound();
             }
 
-            return View(owner);
+            return View(bookingProcess);
         }
 
-
-        // GET: Owners/Create
+        // GET: Booking/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Owners/Create
+        // POST: Booking/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OwnerID,FirstName,LastName,FlightID,PhoneNumber,BookingRefNo,EmailAddress,Age")] Owner owner)
+        public async Task<IActionResult> Create([Bind("Id")] BookingProcess bookingProcess)
         {
-            if (ModelState.IsValid) {
-                _context.Add(owner);
+            if (ModelState.IsValid)
+            {
+                _context.Add(bookingProcess);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(owner);
+            return View(bookingProcess);
         }
 
-        // GET: Owners/Edit/5
+        // GET: Booking/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -83,22 +73,22 @@ namespace PetTravelDb.Controllers
                 return NotFound();
             }
 
-            var owner = await _context.Owner.FindAsync(id);
-            if (owner == null)
+            var bookingProcess = await _context.BookingProcess.FindAsync(id);
+            if (bookingProcess == null)
             {
                 return NotFound();
             }
-            return View(owner);
+            return View(bookingProcess);
         }
 
-        // POST: Owners/Edit/5
+        // POST: Booking/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OwnerID,FirstName,LastName,FlightID,PhoneNumber,BookingRefNo,EmailAddress,Age")] Owner owner)
+        public async Task<IActionResult> Edit(int id, [Bind("Id")] BookingProcess bookingProcess)
         {
-            if (id != owner.OwnerID)
+            if (id != bookingProcess.BookingProcessID)
             {
                 return NotFound();
             }
@@ -107,12 +97,12 @@ namespace PetTravelDb.Controllers
             {
                 try
                 {
-                    _context.Update(owner);
+                    _context.Update(bookingProcess);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OwnerExists(owner.OwnerID))
+                    if (!BookingProcessExists(bookingProcess.BookingProcessID))
                     {
                         return NotFound();
                     }
@@ -123,10 +113,10 @@ namespace PetTravelDb.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(owner);
+            return View(bookingProcess);
         }
 
-        // GET: Owners/Delete/5
+        // GET: Booking/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -134,34 +124,34 @@ namespace PetTravelDb.Controllers
                 return NotFound();
             }
 
-            var owner = await _context.Owner
-                .FirstOrDefaultAsync(m => m.OwnerID == id);
-            if (owner == null)
+            var bookingProcess = await _context.BookingProcess
+                .FirstOrDefaultAsync(m => m.BookingProcessID == id);
+            if (bookingProcess == null)
             {
                 return NotFound();
             }
 
-            return View(owner);
+            return View(bookingProcess);
         }
 
-        // POST: Owners/Delete/5
+        // POST: Booking/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var owner = await _context.Owner.FindAsync(id);
-            if (owner != null)
+            var bookingProcess = await _context.BookingProcess.FindAsync(id);
+            if (bookingProcess != null)
             {
-                _context.Owner.Remove(owner);
+                _context.BookingProcess.Remove(bookingProcess);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OwnerExists(int id)
+        private bool BookingProcessExists(int id)
         {
-            return _context.Owner.Any(e => e.OwnerID == id);
+            return _context.BookingProcess.Any(e => e.BookingProcessID == id);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PetTravelDb.Data;
@@ -23,15 +24,43 @@ namespace PetTravelDb.Controllers
         }
 
         // GET: Flights
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string SortOrder , string searchString)
         {
            
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(SortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = SortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["CurrentFilter"] = searchString;
+
 
             var flightSearch = from s in _context.Flights
                                select s;
-             
-           
 
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                flightSearch = flightSearch.Where(s => s.BookingRefNo.Equals(searchString));
+            }
+
+
+            switch (SortOrder)
+            {
+                case "FlightId_desc":
+                    flightSearch = flightSearch.OrderByDescending(s => s.FlightsId);
+                    break;
+                case "Origin_desc":
+                   flightSearch = flightSearch.OrderBy(s => s.Origin);
+                    break;
+                case "Dest_dsec":
+                    flightSearch = flightSearch.OrderByDescending(s => s.Destination);
+                    break;
+                case "AnimalID":
+                    flightSearch = flightSearch.OrderByDescending(s => s.AnimalID);
+                    break;
+                case "AnimalName_desc":
+                    flightSearch = flightSearch.OrderByDescending(s => s.AnimalName);
+                    break;
+
+
+            }
             return View(await flightSearch.ToListAsync());
         }
         public async Task<IActionResult> FlightSearch(int Flight) 
