@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PetTravelDb.Data;
+using PetTravelDb.Data.Migrations;
 using PetTravelDb.Models;
 
 namespace PetTravelDb.Controllers
@@ -45,7 +46,7 @@ namespace PetTravelDb.Controllers
                     AirlineSearch = AirlineSearch.OrderBy(s => s.AirlinesDescription);
                     break;
                 case "date_desc":
-                    AirlineSearch = AirlineSearch.OrderByDescending(s => s.AirlinesId);
+                    AirlineSearch = AirlineSearch.OrderByDescending(s => s.AirlinesID);
                     break;
 
   
@@ -66,7 +67,7 @@ namespace PetTravelDb.Controllers
             }
 
             var airlines = await _context.Airlines
-                .FirstOrDefaultAsync(m => m.AirlinesId == id);
+                .FirstOrDefaultAsync(m => m.AirlinesID == id);
             if (airlines == null)
             {
                 return NotFound();
@@ -86,7 +87,7 @@ namespace PetTravelDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AirlinesId,AirlinesName,AirlinesDescription")] Airlines airlines)
+        public async Task<IActionResult> Create([Bind("AirlinesId,AirlinesName,AirlinesDescription")] Models.Airlines airlines)
         {
             if (!ModelState.IsValid)
             {
@@ -118,34 +119,33 @@ namespace PetTravelDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AirlinesId,AirlinesName,AirlinesDescription")] Airlines airlines)
-        {
-            if (id != airlines.AirlinesId)
+        public async Task<IActionResult> Edit(int id, [Bind("AirlinesId,AirlinesName,AirlinesDescription")] UpdatedAirlines airlines)
+        { 
             {
-                return NotFound();
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        _context.Update(airlines);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if(_context.Airlines == null)
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(airlines);
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(airlines);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AirlinesExists(airlines.AirlinesId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(airlines);
+            return NotFound();
         }
 
         // GET: Airlines/Delete/5
@@ -157,7 +157,7 @@ namespace PetTravelDb.Controllers
             }
 
             var airlines = await _context.Airlines
-                .FirstOrDefaultAsync(m => m.AirlinesId == id);
+                .FirstOrDefaultAsync(m => m.AirlinesID== id);
             if (airlines == null)
             {
                 return NotFound();
@@ -183,7 +183,7 @@ namespace PetTravelDb.Controllers
 
         private bool AirlinesExists(int id)
         {
-            return _context.Airlines.Any(e => e.AirlinesId == id);
+            return _context.Airlines.Any(e => e.AirlinesID == id);
         }
     }
 }

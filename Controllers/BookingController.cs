@@ -19,11 +19,10 @@ namespace PetTravelDb.Controllers
             _context = context;
         }
 
-        // GET: Booking
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.BookingProcess.ToListAsync());
-        }
+        
+
+    // GET: Booking
+        
 
         // GET: Booking/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -93,7 +92,7 @@ namespace PetTravelDb.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 try
                 {

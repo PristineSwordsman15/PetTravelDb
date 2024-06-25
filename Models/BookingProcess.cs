@@ -2,12 +2,11 @@
 {
     public class BookingProcess
     {
-        public int BookingProcessID {  get; set; }
-        public string BookingProcessName { get; set; }
-        public string BookingProcessDate{ get; set; }
+        public int BookingProcessID { get; set; }
+        public string BookingRefNo { get; set; }
+        public string BookingProcessCard { get; set; }
 
-
-
-
+        public string BookingProcesEmail { get; set; }
+        public string BookingProcesPhone { get; set; }
     }
 }

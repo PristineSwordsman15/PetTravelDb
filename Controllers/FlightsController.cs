@@ -63,7 +63,7 @@ namespace PetTravelDb.Controllers
             }
             return View(await flightSearch.ToListAsync());
         }
-        public async Task<IActionResult> FlightSearch(int Flight) 
+        public async Task<IActionResult> FlightSearch(string Flight) 
         {
             var searchFlight = _context.Flights.Where(F => F.BookingRefNo == Flight);
             return View("Index", await searchFlight.ToListAsync());

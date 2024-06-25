@@ -2,9 +2,12 @@
 {
     public class Airlines
     {
-        public int AirlinesId { get; set; }
+        public int AirlinesID { get; set; }
         public string AirlinesName { get; set; }
         public string AirlinesDescription { get; set; }
+
+
+
 
     }
 }
