@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PetTravelDb.Models;
 using System;
 using System.Linq;
+using PetTravelDb.Data.Migrations;
 namespace PetTravelDb.Data.DBInitialier
 {
     public class DBInitializer
@@ -21,42 +22,85 @@ namespace PetTravel.Data
             
             public static void Initialize(IServiceProvider serviceProvider)
             {
-                using (var context = new ApplicationDbContext(
-                    serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
+                context.Database.EnsureCreated();
+
+                // Look for any existing data.
+                if (context.Pets.Any())
                 {
-                    // Look for any pets.
-                    if (context.Pet.Any())
-                    {
-                        return;   // DB has been seeded
-                    }
-
-                    var pets = new Pet[]
-                    {
-                    new Pet{PetName="Buddy", Species="Dog", PetAge=3},
-                    new Pet{PetName="Mittens", Species="Cat", PetAge=5},
-                    new Pet{PetName="Goldie", Species="Fish", PetAge=1}
-                    };
-
-                    foreach (Pet p in pets)
-                    {
-                        context.Pet.Add(p);
-                    }
-                    context.SaveChanges();
-                    var travels = new Travel[]
-                    {
-                        new Travel{PetId=1, Destination="New York", TravelDate=DateTime.Parse("2023-05-01")},
-                        new Travel{PetId=2, Destination="San Francisco", TravelDate=DateTime.Parse("2023-06-15")},
-                    new Travel{PetId=3, Destination="Chicago", TravelDate=DateTime.Parse("2023-07-20")}
-                    };
-
-                    foreach (Travel t in travels)
-                    {
-                        context.Travel.Add(t);
-                    }
-                    context.SaveChanges();
+                    return;   // DB has been seeded
                 }
+
+                var owners = new Owner[]
+                {
+            new Owner { Name = "John Doe", ContactInformation = "john.doe@example.com" },
+            new Owner { Name = "Jane Smith", ContactInformation = "jane.smith@example.com" }
+                };
+
+                foreach (var o in owners)
+                {
+                    context.Owners.Add(o);
+                }
+                context.SaveChanges();
+
+                var Pets = new Pet[]
+                {
+            new TravelPet { Name = "Buddy", Species = "Dog", Breed = "Golden Retriever", Age = 3, OwnerId = owners[0].OwnerId },
+            new TravelPet { Name = "Mittens", Species = "Cat", Breed = "Siamese", Age = 2, OwnerId = owners[1].OwnerId }
+                };
+
+                foreach (var tp in travelPets)
+                {
+                    context.TravelPets.Add(tp);
+                }
+                context.SaveChanges();
+
+                var airlines = new Airline[]
+                {
+            new Airline { Name = "Airways A" },
+            new Airline { Name = "Airways B" }
+                };
+
+                foreach (var a in airlines)
+                {
+                    context.Airlines.Add(a);
+                }
+                context.SaveChanges();
+
+                var flights = new Flight[]
+                {
+            new Flight { FlightNumber = "AA123", DepartureTime = DateTime.Now.AddHours(2), ArrivalTime = DateTime.Now.AddHours(5), AirlineId = airlines[0].AirlineId },
+            new Flight { FlightNumber = "BB456", DepartureTime = DateTime.Now.AddHours(3), ArrivalTime = DateTime.Now.AddHours(6), AirlineId = airlines[1].AirlineId }
+                };
+
+                foreach (var f in flights)
+                {
+                    context.Flights.Add(f);
+                }
+                context.SaveChanges();
+
+                var petFlights = new PetFlight[]
+                {
+            new PetFlight { PetId = Pets[0].PetId, FlightId = flights[0].FlightId },
+            new PetFlight { PetId = Pets[1].PetId, FlightId = flights[1].FlightId }
+                };
+
+                foreach (var pf in petFlights)
+                {
+                    context.PetFlights.Add(pf);
+                }
+                context.SaveChanges();
+
+                var bookingProcesses = new BookingProcess[]
+                {
+            new BookingProcess { BookingDate = DateTime.Now, PetFlightId = petFlights[0].PetFlightId },
+            new BookingProcess { BookingDate = DateTime.Now, PetFlightId = petFlights[1].PetFlightId }
+                };
+
+                foreach (var bp in bookingProcesses)
+                {
+                    context.BookingProcesses.Add(bp);
+                }
+                context.SaveChanges();
             }
         }
-    }
-}
 
