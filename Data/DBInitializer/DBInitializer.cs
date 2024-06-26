@@ -14,9 +14,6 @@ namespace PetTravelDb.Data.DBInitialier
      // Data/DBInitializer.cs
      }
 
-
-
-
 namespace PetTravel.Data
     {
         public static class DBInitializer

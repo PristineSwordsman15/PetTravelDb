@@ -9,6 +9,7 @@
         public int PhoneNumber { get; set;}
         public int BookingRefNo { get; set; }
         public string EmailAddress { get; set; }
-        public int Age { get; set; }    
+        public int Age { get; set; }
+        public ICollection<Pet> Pets { get; set; }
     }
 }

@@ -8,9 +8,14 @@
         
         public string Species { get; set; }
 
+        public string Breed { get; set; }
+
         public int OwnerID { get; set; }
 
+        public  Owner Owner  { get; set; }
+
         public  int PetAge { get; set; }
+        public ICollection<PetFlight> PetFlight { get; set; }
 
     }
 }

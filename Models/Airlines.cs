@@ -6,6 +6,8 @@
         public string AirlinesName { get; set; }
         public string AirlinesDescription { get; set; }
 
+        public ICollection<Flight> Flights { get; set; }
+
 
 
 

@@ -9,5 +9,9 @@
         public string BookingProcesEmail { get; set; }
         public string BookingProcesPhone { get; set; }
 
+        public DateTime BookingDate { get; set; }
+
+        public int PetFlight { get;set }
+        public PetFlight PetFlight { get; set; }
     }
 }
