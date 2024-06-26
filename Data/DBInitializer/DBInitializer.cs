@@ -28,7 +28,7 @@ namespace PetTravel.Data
                     serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
                 {
                     // Look for any pets.
-                    if (context.Pets.Any())
+                    if (context.Pet.Any())
                     {
                         return;   // DB has been seeded
                     }
@@ -42,7 +42,7 @@ namespace PetTravel.Data
 
                     foreach (Pet p in pets)
                     {
-                        context.Pets.Add(p);
+                        context.Pet.Add(p);
                     }
                     context.SaveChanges();
                     var travels = new Travel[]
