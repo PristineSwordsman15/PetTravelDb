@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 
 namespace PetTravelDb.Data
 {
+    //Add profile data for application userd by adding properties to the AppUser class
     public class ApplicationUser : IdentityUser
     {
         public string FirstName { get; set; }

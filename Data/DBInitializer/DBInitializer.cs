@@ -12,52 +12,52 @@ namespace PetTravelDb.Data.DBInitialier
 {
     public class DBInitializer
     {
-     // Data/DBInitializer.cs
-     }
+        // Data/DBInitializer.cs
+    }
 
-namespace PetTravel.Data
+    namespace PetTravel.Data
     {
         public static class DBInitializer
         {
-            
-            public static void Initialize(IServiceProvider serviceProvider)
+
+            public static void Initialize(ApplicationDbContext context)
             {
                 context.Database.EnsureCreated();
 
                 // Look for any existing data.
-                if (context.Pets.Any())
+                if (context.Pet.Any())
                 {
                     return;   // DB has been seeded
                 }
 
                 var owners = new Owner[]
                 {
-            new Owner { Name = "John Doe", ContactInformation = "john.doe@example.com" },
-            new Owner { Name = "Jane Smith", ContactInformation = "jane.smith@example.com" }
+            new Owner { FirstLastName= "John Doe", EmailAddress = "john.doe@example.com" },
+            new Owner { FirstLastName = "Jane Smith", EmailAddress = "jane.smith@example.com" }
                 };
 
                 foreach (var o in owners)
                 {
-                    context.Owners.Add(o);
+                    context.Owner.Add(o);
                 }
                 context.SaveChanges();
 
                 var Pets = new Pet[]
                 {
-            new TravelPet { Name = "Buddy", Species = "Dog", Breed = "Golden Retriever", Age = 3, OwnerId = owners[0].OwnerId },
-            new TravelPet { Name = "Mittens", Species = "Cat", Breed = "Siamese", Age = 2, OwnerId = owners[1].OwnerId }
+            new Pet { PetName = "Buddy", Species = "Dog", Breed = "Golden Retriever", PetAge = 3, OwnerID = owners[0].OwnerID },
+            new Pet { PetName = "Mittens", Species = "Cat", Breed = "Siamese", PetAge = 2, OwnerID = owners[1].OwnerID }
                 };
 
-                foreach (var tp in travelPets)
+                foreach (var p in Pets)
                 {
-                    context.TravelPets.Add(tp);
+                    context.Pet.Add(tp);
                 }
                 context.SaveChanges();
 
-                var airlines = new Airline[]
+                var airlines = new Airlines[]
                 {
-            new Airline { Name = "Airways A" },
-            new Airline { Name = "Airways B" }
+            new Airlines { Name = "Airways A" },
+            new Airlines { Name = "Airways B" }
                 };
 
                 foreach (var a in airlines)
@@ -66,10 +66,10 @@ namespace PetTravel.Data
                 }
                 context.SaveChanges();
 
-                var flights = new Flight[]
+                var flights = new Flights[]
                 {
-            new Flight { FlightNumber = "AA123", DepartureTime = DateTime.Now.AddHours(2), ArrivalTime = DateTime.Now.AddHours(5), AirlineId = airlines[0].AirlineId },
-            new Flight { FlightNumber = "BB456", DepartureTime = DateTime.Now.AddHours(3), ArrivalTime = DateTime.Now.AddHours(6), AirlineId = airlines[1].AirlineId }
+            new Flights { FlightNumber = "AA123", DepartureTime = DateTime.Now.AddHours(2), ArrivalTime = DateTime.Now.AddHours(5), FlightsId = airlines[0].AirlineId },
+            new Flights { FlightNumber = "BB456", DepartureTime = DateTime.Now.AddHours(3), ArrivalTime = DateTime.Now.AddHours(6), FlightsId = airlines[1].AirlineId }
                 };
 
                 foreach (var f in flights)
@@ -80,8 +80,8 @@ namespace PetTravel.Data
 
                 var petFlights = new PetFlight[]
                 {
-            new PetFlight { PetId = Pets[0].PetId, FlightId = flights[0].FlightId },
-            new PetFlight { PetId = Pets[1].PetId, FlightId = flights[1].FlightId }
+            new PetFlight { PetFlightId = Pets[0].PetId, FlightId = flights[0].FlightId },
+            new PetFlight { PetFlightId = Pets[1].PetId, FlightId = flights[1].FlightId }
                 };
 
                 foreach (var pf in petFlights)
@@ -98,9 +98,12 @@ namespace PetTravel.Data
 
                 foreach (var bp in bookingProcesses)
                 {
-                    context.BookingProcesses.Add(bp);
+                    context.BookingProcess.Add(bp);
                 }
                 context.SaveChanges();
             }
         }
+    }
+}
+
 

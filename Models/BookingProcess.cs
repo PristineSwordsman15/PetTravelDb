@@ -11,7 +11,9 @@
 
         public DateTime BookingDate { get; set; }
 
-        public int PetFlight { get;set }
-        public PetFlight PetFlight { get; set; }
+        public int PetFlight { get; set; }
+
+        public int PetFlightID { get; set; }
+        public ICollection< PetFlight> PetFlights { get; set; }
     }
 }
