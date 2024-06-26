@@ -4,14 +4,16 @@ using System.Diagnostics;
 // Data/DBInitializer.cs
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetTravel.Models;
+using PetTravelDb.Models;
 using System;
 using System.Linq;
 namespace PetTravelDb.Data.DBInitialier
 {
     public class DBInitializer
     {
-        // Data/DBInitializer.cs
+     // Data/DBInitializer.cs
+     }
+
 
 
 
@@ -19,10 +21,11 @@ namespace PetTravel.Data
     {
         public static class DBInitializer
         {
+            
             public static void Initialize(IServiceProvider serviceProvider)
             {
-                using (var context = new PetTravelContext(
-                    serviceProvider.GetRequiredService<DbContextOptions<PetTravelContext>>()))
+                using (var context = new ApplicationDbContext(
+                    serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
                 {
                     // Look for any pets.
                     if (context.Pets.Any())
@@ -32,9 +35,9 @@ namespace PetTravel.Data
 
                     var pets = new Pet[]
                     {
-                    new Pet{Name="Buddy", Species="Dog", Age=3},
-                    new Pet{Name="Mittens", Species="Cat", Age=5},
-                    new Pet{Name="Goldie", Species="Fish", Age=1}
+                    new Pet{PetName="Buddy", Species="Dog", PetAge=3},
+                    new Pet{PetName="Mittens", Species="Cat", PetAge=5},
+                    new Pet{PetName="Goldie", Species="Fish", PetAge=1}
                     };
 
                     foreach (Pet p in pets)
@@ -51,7 +54,7 @@ namespace PetTravel.Data
 
                     foreach (Travel t in travels)
                     {
-                        context.Travels.Add(t);
+                        context.Travel.Add(t);
                     }
                     context.SaveChanges();
                 }
@@ -59,4 +62,4 @@ namespace PetTravel.Data
         }
     }
 }
-}
+

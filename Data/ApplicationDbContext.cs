@@ -4,7 +4,7 @@ using PetTravelDb.Models;
 
 namespace PetTravelDb.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -16,4 +16,10 @@ namespace PetTravelDb.Data
         public DbSet<PetTravelDb.Models.Airlines> Airlines { get; set; } = default!;
         public DbSet<PetTravelDb.Models.BookingProcess> BookingProcess { get; set; } = default!;
     }
+    //Define Application
+    
+    
+
+    
 }
+

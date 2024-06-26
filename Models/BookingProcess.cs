@@ -8,5 +8,6 @@
 
         public string BookingProcesEmail { get; set; }
         public string BookingProcesPhone { get; set; }
+
     }
 }
