@@ -1,8 +1,12 @@
-﻿namespace PetTravelDb.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PetTravelDb.Models
 {
     public class Pet
     {
+        [Key]
         public int PetId { get; set; }
+        [Required,MaxLength()]
         public string PetName { get; set; }
         public string PetNotes { get; set; }
         

@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\DBInitializer\**" />
+    <Content Remove="Data\DBInitializer\**" />
+    <EmbeddedResource Remove="Data\DBInitializer\**" />
+    <None Remove="Data\DBInitializer\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.3" />
@@ -21,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\DBInitializer\" />
     <Folder Include="wwwroot\css\" />
   </ItemGroup>
 

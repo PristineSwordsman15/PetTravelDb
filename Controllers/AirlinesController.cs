@@ -46,7 +46,7 @@ namespace PetTravelDb.Controllers
                     AirlineSearch = AirlineSearch.OrderBy(s => s.AirlinesDescription);
                     break;
                 case "date_desc":
-                    AirlineSearch = AirlineSearch.OrderByDescending(s => s.AirlinesID);
+                    AirlineSearch = AirlineSearch.OrderByDescending(s => s.AirlinesId);
                     break;
                     
   
@@ -67,7 +67,7 @@ namespace PetTravelDb.Controllers
             }
 
             var airlines = await _context.Airlines
-                .FirstOrDefaultAsync(m => m.AirlinesID == id);
+                .FirstOrDefaultAsync(m => m.AirlinesId == id);
             if (airlines == null)
             {
                 return NotFound();
@@ -157,7 +157,7 @@ namespace PetTravelDb.Controllers
             }
 
             var airlines = await _context.Airlines
-                .FirstOrDefaultAsync(m => m.AirlinesID== id);
+                .FirstOrDefaultAsync(m => m.AirlinesId== id);
             if (airlines == null)
             {
                 return NotFound();
@@ -183,7 +183,7 @@ namespace PetTravelDb.Controllers
 
         private bool AirlinesExists(int id)
         {
-            return _context.Airlines.Any(e => e.AirlinesID == id);
+            return _context.Airlines.Any(e => e.AirlinesId == id);
         }
     }
 }
