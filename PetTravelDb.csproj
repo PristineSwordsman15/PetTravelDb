@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\DBInitializer\" />
     <Folder Include="wwwroot\css\" />
   </ItemGroup>
 
