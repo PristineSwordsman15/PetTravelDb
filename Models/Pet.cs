@@ -6,12 +6,13 @@ namespace PetTravelDb.Models
     {
         [Key]
         public int PetId { get; set; }
-        [Required,MaxLength()]
+        [Required, MaxLength(200)]
         public string PetName { get; set; }
+        [MaxLength(200)]
         public string PetNotes { get; set; }
-        
+        [Required, MaxLength(50)]
         public string Species { get; set; }
-
+        [Required, MaxLength(50)]
         public string Breed { get; set; }
 
         public int OwnerID { get; set; }

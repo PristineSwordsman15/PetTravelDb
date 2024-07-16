@@ -29,18 +29,18 @@ namespace PetTravelDb.Controllers
             ViewData["CurrentFilter"] = searchString;
 
             var AirlineSearch = from s in _context.Airlines
-                               select s;
+                                select s;
 
             if (!String.IsNullOrEmpty(searchString))
             {
                 AirlineSearch = AirlineSearch.Where(s => s.AirlinesName.Contains(searchString));
             }
-                                                   
+
 
             switch (sortOrder)
             {
                 case "name_desc":
-                    AirlineSearch= AirlineSearch.OrderByDescending(s => s.AirlinesName);
+                    AirlineSearch = AirlineSearch.OrderByDescending(s => s.AirlinesName);
                     break;
                 case "AirlineID":
                     AirlineSearch = AirlineSearch.OrderBy(s => s.AirlinesDescription);
@@ -48,16 +48,16 @@ namespace PetTravelDb.Controllers
                 case "date_desc":
                     AirlineSearch = AirlineSearch.OrderByDescending(s => s.AirlinesId);
                     break;
-                    
-  
 
-                    
-              
+
+
+
+
             }
 
             return View(await AirlineSearch.AsNoTracking().ToListAsync());
         }
-      
+
         // GET: Airlines/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -119,7 +119,8 @@ namespace PetTravelDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AirlinesId,AirlinesName,AirlinesDescription")] UpdatedAirlines airlines)
+        public async Task<IActionResult> Edit(
+            int id, [Bind("AirlinesId,AirlinesName,AirlinesDescription")] UpdatedAirlines airlines)
         { 
             {
                 if (ModelState.IsValid)

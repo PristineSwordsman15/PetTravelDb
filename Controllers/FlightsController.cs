@@ -53,10 +53,10 @@ namespace PetTravelDb.Controllers
                     flightSearch = flightSearch.OrderByDescending(s => s.Destination);
                     break;
                 case "AnimalID":
-                    flightSearch = flightSearch.OrderByDescending(s => s.AnimalID);
+                    flightSearch = flightSearch.OrderByDescending(s => s.PetID);
                     break;
                 case "AnimalName_desc":
-                    flightSearch = flightSearch.OrderByDescending(s => s.AnimalName);
+                    flightSearch = flightSearch.OrderByDescending(s => s.PetName);
                     break;
 
 
