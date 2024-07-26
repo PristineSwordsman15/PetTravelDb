@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PetTravelDb.Data;
-using PetTravelDb.Data.Migrations;
 using PetTravelDb.Models;
 
 namespace PetTravelDb.Controllers
 {
+    [Authorize]
     public class AirlinesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -120,10 +121,10 @@ namespace PetTravelDb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
-            int id, [Bind("AirlinesId,AirlinesName,AirlinesDescription")] UpdatedAirlines airlines)
+            int id, [Bind("AirlinesId,AirlinesName,AirlinesDescription")] Airlines airlines)
         { 
             {
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
                     try
                     {

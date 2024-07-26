@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PetTravelDb.Models;
 using PetTravelDb.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PetTravelDb.Controllers
 {
+    [Authorize]
     public class PetsController : Controller
     {
         private readonly ApplicationDbContext _context;

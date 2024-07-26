@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -14,6 +15,7 @@ using PetTravelDb.Models;
 
 namespace PetTravelDb.Controllers
 {
+    [Authorize]
     public class FlightsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -52,10 +54,10 @@ namespace PetTravelDb.Controllers
                 case "Dest_dsec":
                     flightSearch = flightSearch.OrderByDescending(s => s.Destination);
                     break;
-                case "AnimalID":
+                case "PetID":
                     flightSearch = flightSearch.OrderByDescending(s => s.PetID);
                     break;
-                case "AnimalName_desc":
+                case "PetName_desc":
                     flightSearch = flightSearch.OrderByDescending(s => s.PetName);
                     break;
 
@@ -102,7 +104,7 @@ namespace PetTravelDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FlightsId,Origin,Destination,AnimalID,AnimalName,BookingRefNo,Status")] Flights flights)
+        public async Task<IActionResult> Create([Bind("FlightsId,Origin,Destination,PetID,PetName,BookingRefNo,Status")] Flights flights)
         {
             if (ModelState.IsValid)
             {
@@ -134,7 +136,7 @@ namespace PetTravelDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("FlightsId,Origin,Destination,AnimalID,AnimalName,BookingRefNo,Status")] Flights flights)
+        public async Task<IActionResult> Edit(int id, [Bind("FlightsId,Origin,Destination,PetID,PetName,BookingRefNo,Status")] Flights flights)
         {
             if (id != flights.FlightsId)
             {

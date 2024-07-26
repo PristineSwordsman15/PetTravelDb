@@ -11,7 +11,7 @@ namespace PetTravelDb.Models
         [Required, MaxLength(20)]
         public string LastName { get; set; }
         public int FlightID { get; set; }
-        [Required, MaxLength(8)]
+        [Required, MaxLength(11)]
         public int PhoneNumber { get; set;}
         [Required, MaxLength(6)]
         public int BookingRefNo { get; set; }

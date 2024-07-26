@@ -7,7 +7,7 @@ namespace PetTravelDb.Models
 
         [Key]
         public int AirlinesId { get; set; }
-        
+        [Required, MaxLength(20)]
         public string AirlinesName { get; set; }
         [Required, MaxLength(100)]
         public string AirlinesDescription { get; set; }

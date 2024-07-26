@@ -8,7 +8,7 @@ namespace PetTravelDb.Models
         public int BookingProcessID { get; set; }
         [MaxLength(6)]
         public string BookingRefNo { get; set; }
-        [Required,MaxLength (10)]
+        [Required,MaxLength (6)]
         public string BookingProcessCard { get; set; }
         public string BookingProcesEmail { get; set; }
         public string BookingProcesPhone { get; set; }

@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetTravelDb.Models;
 
 namespace PetTravelDb.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -18,16 +19,11 @@ namespace PetTravelDb.Data
         public DbSet<PetTravelDb.Models.BookingProcess> BookingProcess { get; set; } = default!;
        public DbSet<PetFlight> PetFlights { get; set; }
     }
-    public class ApplicationUserEntityConfiguration : IEntityTypeConfiguration<ApplicationUser>
+    public class ApplicationUserEntityConfiguration : IEntityTypeConfiguration<IdentityUser>
    {
-        public void Configure(EntityTypeBuilder<ApplicationUser> builder)
+        public void Configure(EntityTypeBuilder<IdentityUser> builder)
         {
-            builder.Property(u => u.FirstName).HasMaxLength(250);
-            builder.Property(u => u.LastName).HasMaxLength(250);
-            builder.Property(u => u.PhoneNumber).HasMaxLength(250);
-            builder.Property(u => u.EmailAddress).HasMaxLength(250);
-            builder.Property(u => u.Gender).HasMaxLength(50);
-            builder.Property(u => u.PostalAddress).HasMaxLength(250);
+
         }
    }
       

@@ -12,22 +12,18 @@ namespace PetTravelDb.Data
             {
                 var ApplicationDbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                var pets = new Pet[]
+                var airlines = new Airlines[]
                 {
-                     new Pet
+                     new Airlines
             {
-             PetName = "Michael",
-             PetNotes = "Broken Leg",
+             AirlinesName = "Mslaysia Airlines",
+             AirlinesDescription= "MH",
 
-             Breed = "Labrador",
-
-             OwnerID = 26,
-
-             PetAge = 8
+      
                      }
 
     };
-                ApplicationDbContext.Pet.AddRange(pets);
+                ApplicationDbContext.Airlines.AddRange(airlines);
                 ApplicationDbContext.SaveChanges();
         }
             }
