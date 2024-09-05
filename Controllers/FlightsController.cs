@@ -54,8 +54,8 @@ namespace PetTravelDb.Controllers
                 case "Dest_dsec":
                     flightSearch = flightSearch.OrderByDescending(s => s.Destination);
                     break;
-                case "PetID":
-                    flightSearch = flightSearch.OrderByDescending(s => s.PetID);
+                case "PetId":
+                    flightSearch = flightSearch.OrderByDescending(s => s.PetId);
                     break;
                 case "PetName_desc":
                     flightSearch = flightSearch.OrderByDescending(s => s.PetName);
@@ -104,7 +104,7 @@ namespace PetTravelDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FlightsId,Origin,Destination,PetID,PetName,BookingRefNo,Status")] Flights flight)
+        public async Task<IActionResult> Create([Bind("FlightsId,Origin,Destination,PetId,PetName,BookingRefNo,Status")] Flights flight)
         {
             if (ModelState.IsValid)
             {
@@ -136,7 +136,7 @@ namespace PetTravelDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("FlightsId,Origin,Destination,PetID,PetName,BookingRefNo,Status")] Flights flight)
+        public async Task<IActionResult> Edit(int id, [Bind("FlightsId,Origin,Destination,PetId,PetName,BookingRefNo,Status")] Flights flight)
         {
             if (id != flight.FlightsId)
             {

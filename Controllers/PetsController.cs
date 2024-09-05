@@ -66,7 +66,7 @@ namespace PetTravelDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PetId,PetName,PetNotes,Breed,OwnerID,PetAge")] Pet pet)
+        public async Task<IActionResult> Create([Bind("PetId,PetName,PetNotes,Breed,OwnerId,PetAge")] Pet pet)
         {
             if (ModelState.IsValid)
             {
@@ -98,7 +98,7 @@ namespace PetTravelDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PetId,PetName,PetNotes,Breed,OwnerID,PetAge")] Pet pet)
+        public async Task<IActionResult> Edit(int id, [Bind("PetId,PetName,PetNotes,Breed,OwnerId,PetAge")] Pet pet)
         {
             if (id != pet.PetId)
             {

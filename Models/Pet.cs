@@ -15,7 +15,7 @@ namespace PetTravelDb.Models
         [Required, MaxLength(50)]
         public string Breed { get; set; }
 
-        public int OwnerID { get; set; }
+        public int OwnerId { get; set; }
 
         public  Owner Owner  { get; set; }
         [Required, Range(1, 50)]

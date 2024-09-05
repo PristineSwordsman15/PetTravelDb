@@ -46,7 +46,7 @@ namespace PetTravelDb.Controllers
             }
 
             var owner = await _context.Owner
-                .FirstOrDefaultAsync(m => m.OwnerID == id);
+                .FirstOrDefaultAsync(m => m.OwnerId == id);
             if (owner == null)
             {
                 return NotFound();
@@ -67,7 +67,7 @@ namespace PetTravelDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OwnerID,FirstName,LastName,FlightID,PhoneNumber,BookingRefNo,EmailAddress,Age")] Models.Owner owner)
+        public async Task<IActionResult> Create([Bind("OwnerId,FirstName,LastName,FlightID,PhoneNumber,BookingRefNo,EmailAddress,Age")] Models.Owner owner)
         {
             if (ModelState.IsValid) {
                 _context.Add(owner);
@@ -98,9 +98,9 @@ namespace PetTravelDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OwnerID,FirstName,LastName,FlightID,PhoneNumber,BookingRefNo,EmailAddress,Age")] Owner owner)
+        public async Task<IActionResult> Edit(int id, [Bind("OwnerId,FirstName,LastName,FlightID,PhoneNumber,BookingRefNo,EmailAddress,Age")] Owner owner)
         {
-            if (id != owner.OwnerID)
+            if (id != owner.OwnerId)
             {
                 return NotFound();
             }
@@ -114,7 +114,7 @@ namespace PetTravelDb.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OwnerExists(owner.OwnerID))
+                    if (!OwnerExists(owner.OwnerId))
                     {
                         return NotFound();
                     }
@@ -137,7 +137,7 @@ namespace PetTravelDb.Controllers
             }
 
             var owner = await _context.Owner
-                .FirstOrDefaultAsync(m => m.OwnerID == id);
+                .FirstOrDefaultAsync(m => m.OwnerId == id);
             if (owner == null)
             {
                 return NotFound();
@@ -163,7 +163,7 @@ namespace PetTravelDb.Controllers
 
         private bool OwnerExists(int id)
         {
-            return _context.Owner.Any(e => e.OwnerID == id);
+            return _context.Owner.Any(e => e.OwnerId == id);
         }
     }
 }

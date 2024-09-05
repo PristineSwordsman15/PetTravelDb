@@ -12,7 +12,7 @@ namespace PetTravelDb.Models
         public int FlightId { get; set;}
         public Flights Flights { get; set; }
         [Required]
-        public int PetID { get; set;}
+        public int PetId { get; set;}
                   
     }
 }

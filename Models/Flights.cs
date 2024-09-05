@@ -23,7 +23,7 @@ namespace PetTravelDb.Models
         [Required, MaxLength(250)]
         public string Destination { get; set; }
         [Required, MaxLength(250)]
-        public int PetID { get; set; }
+        public int PetId { get; set; }
         [Required, MaxLength(10)]
         public string PetName { get; set; }
 
