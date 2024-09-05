@@ -6,7 +6,7 @@ namespace PetTravelDb.Models
     {
         [Key]
         public int PetId { get; set; }
-        [Required, MaxLength(200)]
+        [Required]
         public string PetName { get; set; }
         [MaxLength(200)]
         public string PetNotes { get; set; }
@@ -18,8 +18,8 @@ namespace PetTravelDb.Models
         public int OwnerID { get; set; }
 
         public  Owner Owner  { get; set; }
-
-        public  int PetAge { get; set; }
+        [Required, Range(1, 50)]
+        public int PetAge { get; set; }
         public ICollection<PetFlight> PetFlight { get; set; }
 
     }

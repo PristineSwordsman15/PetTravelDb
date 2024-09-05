@@ -12,7 +12,7 @@ namespace PetTravelDb.Models
         [Required, MaxLength(100)]
         public string AirlinesDescription { get; set; }
         [Required, MaxLength(50)]
-        public ICollection<Flights> Flights { get; set; }
+        public ICollection<Flights> Flight{ get; set; }
 
 
 

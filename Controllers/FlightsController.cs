@@ -45,7 +45,7 @@ namespace PetTravelDb.Controllers
 
             switch (SortOrder)
             {
-                case "FlightId_desc":
+                case "FlightsID_desc":
                     flightSearch = flightSearch.OrderByDescending(s => s.FlightsId);
                     break;
                 case "Origin_desc":
@@ -63,7 +63,7 @@ namespace PetTravelDb.Controllers
 
 
             }
-            return View(await flightSearch.ToListAsync());
+            return View(await flightSearch.AsNoTracking().ToListAsync());
         }
         public async Task<IActionResult> FlightSearch(string Flight) 
         {
@@ -83,14 +83,14 @@ namespace PetTravelDb.Controllers
                 return NotFound();
             }
 
-            var flights = await _context.Flights
+            var flight = await _context.Flights
                 .FirstOrDefaultAsync(m => m.FlightsId == id);
-            if (flights == null)
+            if (flight == null)
             {
                 return NotFound();
             }
 
-            return View(flights);
+            return View(flight);
         }
 
         // GET: Flights/Create
@@ -104,15 +104,15 @@ namespace PetTravelDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FlightsId,Origin,Destination,PetID,PetName,BookingRefNo,Status")] Flights flights)
+        public async Task<IActionResult> Create([Bind("FlightsId,Origin,Destination,PetID,PetName,BookingRefNo,Status")] Flights flight)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(flights);
+                _context.Add(flight);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(flights);
+            return View(flight);
         }
 
         // GET: Flights/Edit/5
@@ -123,12 +123,12 @@ namespace PetTravelDb.Controllers
                 return NotFound();
             }
 
-            var flights = await _context.Flights.FindAsync(id);
-            if (flights == null)
+            var flight = await _context.Flights.FindAsync(id);
+            if (flight == null)
             {
                 return NotFound();
             }
-            return View(flights);
+            return View(flight);
         }
 
         // POST: Flights/Edit/5
@@ -136,9 +136,9 @@ namespace PetTravelDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("FlightsId,Origin,Destination,PetID,PetName,BookingRefNo,Status")] Flights flights)
+        public async Task<IActionResult> Edit(int id, [Bind("FlightsId,Origin,Destination,PetID,PetName,BookingRefNo,Status")] Flights flight)
         {
-            if (id != flights.FlightsId)
+            if (id != flight.FlightsId)
             {
                 return NotFound();
             }
@@ -147,12 +147,12 @@ namespace PetTravelDb.Controllers
             {
                 try
                 {
-                    _context.Update(flights);
+                    _context.Update(flight);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FlightsExists(flights.FlightsId))
+                    if (!FlightsExists(flight.FlightsId))
                     {
                         return NotFound();
                     }
@@ -163,7 +163,7 @@ namespace PetTravelDb.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(flights);
+            return View(flight);
         }
 
         // GET: Flights/Delete/5
@@ -174,14 +174,14 @@ namespace PetTravelDb.Controllers
                 return NotFound();
             }
 
-            var flights = await _context.Flights
+            var flight = await _context.Flights
                 .FirstOrDefaultAsync(m => m.FlightsId == id);
-            if (flights == null)
+            if (flight== null)
             {
                 return NotFound();
             }
 
-            return View(flights);
+            return View(flight);
         }
 
         // POST: Flights/Delete/5
@@ -189,10 +189,10 @@ namespace PetTravelDb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var flights = await _context.Flights.FindAsync(id);
-            if (flights != null)
+            var flight = await _context.Flights.FindAsync(id);
+            if (flight != null)
             {
-                _context.Flights.Remove(flights);
+                _context.Flights.Remove(flight);
             }
 
             await _context.SaveChangesAsync();

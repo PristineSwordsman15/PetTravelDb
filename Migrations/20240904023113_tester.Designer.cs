@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetTravelDb.Data;
 
 #nullable disable
 
-namespace PetTravelDb.Data.Migrations
+namespace PetTravelDb.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240904023113_tester")]
+    partial class tester
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -292,7 +295,7 @@ namespace PetTravelDb.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FlightsId"));
 
-                    b.Property<int>("AirlinesId")
+                    b.Property<int?>("AirlinesId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ArrivalTime")
@@ -366,6 +369,9 @@ namespace PetTravelDb.Data.Migrations
                     b.Property<int>("FlightID")
                         .HasColumnType("int");
 
+                    b.Property<int>("FlightsId")
+                        .HasColumnType("int");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -376,6 +382,8 @@ namespace PetTravelDb.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("OwnerID");
+
+                    b.HasIndex("FlightsId");
 
                     b.ToTable("Owner");
                 });
@@ -504,13 +512,20 @@ namespace PetTravelDb.Data.Migrations
 
             modelBuilder.Entity("PetTravelDb.Models.Flights", b =>
                 {
-                    b.HasOne("PetTravelDb.Models.Airlines", "Airlines")
-                        .WithMany("Fligh")
-                        .HasForeignKey("AirlinesId")
+                    b.HasOne("PetTravelDb.Models.Airlines", null)
+                        .WithMany("Flights")
+                        .HasForeignKey("AirlinesId");
+                });
+
+            modelBuilder.Entity("PetTravelDb.Models.Owner", b =>
+                {
+                    b.HasOne("PetTravelDb.Models.Flights", "Flights")
+                        .WithMany()
+                        .HasForeignKey("FlightsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Airlines");
+                    b.Navigation("Flights");
                 });
 
             modelBuilder.Entity("PetTravelDb.Models.Pet", b =>
@@ -553,7 +568,7 @@ namespace PetTravelDb.Data.Migrations
 
             modelBuilder.Entity("PetTravelDb.Models.Airlines", b =>
                 {
-                    b.Navigation("Fligh");
+                    b.Navigation("Flights");
                 });
 
             modelBuilder.Entity("PetTravelDb.Models.Owner", b =>

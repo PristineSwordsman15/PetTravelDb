@@ -32,7 +32,7 @@ namespace PetTravelDb.Controllers
                 petSearch = petSearch.Where(s => s.Destination.Contains(searchPet));
             }
 
-            return View(await _context.Pet.ToListAsync());
+            return View(await petSearch.AsNoTracking().ToListAsync());
         }
 
 

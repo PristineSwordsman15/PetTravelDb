@@ -32,7 +32,7 @@ namespace PetTravelDb.Controllers
                 ownerSearch = ownerSearch.Where(s => s.LastName.Equals(searchOwner));
             }
 
-            return View(await _context.Owner.ToListAsync());
+            return View(await ownerSearch.AsNoTracking().ToListAsync());
         }
 
 
@@ -67,7 +67,7 @@ namespace PetTravelDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OwnerID,FirstName,LastName,FlightID,PhoneNumber,BookingRefNo,EmailAddress,Age")] Owner owner)
+        public async Task<IActionResult> Create([Bind("OwnerID,FirstName,LastName,FlightID,PhoneNumber,BookingRefNo,EmailAddress,Age")] Models.Owner owner)
         {
             if (ModelState.IsValid) {
                 _context.Add(owner);

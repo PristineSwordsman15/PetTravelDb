@@ -29,6 +29,11 @@ namespace PetTravelDb.Models
 
         public string Status { get; set; }
 
+        public int AirlinesId { get; set; }
+
+        public Airlines Airline { get; set; }
+
+
     }
 }
 
