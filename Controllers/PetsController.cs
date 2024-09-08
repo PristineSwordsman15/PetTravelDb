@@ -129,6 +129,12 @@ namespace PetTravelDb.Controllers
             return View(pet);
         }
 
+        // GET: Airlines/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind(new[] { "PetId,PetName,PetNotes,Breed,OwnerId,PetAge" })] Pet pet)
