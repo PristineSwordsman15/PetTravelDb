@@ -18,6 +18,7 @@ namespace PetTravelDb.Data
         public DbSet<PetTravelDb.Models.Airlines> Airlines { get; set; } = default!;
         
        public DbSet<PetFlight> PetFlight { get; set; }
+        public object OwnerExists { get; internal set; }
     }
     public class ApplicationUserEntityConfiguration : IEntityTypeConfiguration<IdentityUser>
    {

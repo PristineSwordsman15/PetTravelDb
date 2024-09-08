@@ -22,22 +22,49 @@ namespace PetTravelDb.Controllers
         }
 
         // GET: Pets
-        public async Task<IActionResult> Index(string searchPet)
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
 
-            var petSearch = from s in _context.Flights
-                               select s;
-            if (!String.IsNullOrEmpty(searchPet))
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["CurrentFilter"] = searchString;
+
+            var petSearch = from s in _context.Pet
+                                select s;
+
+            if (!String.IsNullOrEmpty(searchString))
             {
-                petSearch = petSearch.Where(s => s.Destination.Contains(searchPet));
+                petSearch = petSearch.Where(s => s.PetName.Contains(searchString));
+            }
+
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    petSearch = petSearch.OrderByDescending(s => s.PetName);
+                    break;
+                case "AirlineID":
+                    petSearch = petSearch.OrderBy(s => s.PetId);
+                    break;
+                case "date_desc":
+                    petSearch = petSearch.OrderByDescending(s => s.PetAge);
+                    break;
+
+
+
+
+
             }
 
             return View(await petSearch.AsNoTracking().ToListAsync());
+
+           
         }
+        // POST: Pets/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create1() => View();
 
-
-
-        // GET: Pets/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -55,30 +82,7 @@ namespace PetTravelDb.Controllers
             return View(pet);
         }
 
-        // GET: Pets/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Pets/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PetId,PetName,PetNotes,Breed,OwnerId,PetAge")] Pet pet)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(pet);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(pet);
-        }
-
-        // GET: Pets/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+         async Task<IActionResult> Edit1(int? id)
         {
             if (id == null)
             {
@@ -93,12 +97,9 @@ namespace PetTravelDb.Controllers
             return View(pet);
         }
 
-        // POST: Pets/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PetId,PetName,PetNotes,Breed,OwnerId,PetAge")] Pet pet)
+        public async Task<IActionResult> Edit(int id, [Bind(new[] { "PetId,PetName,PetNotes,Breed,OwnerId,PetAge" })] Pet pet)
         {
             if (id != pet.PetId)
             {
@@ -128,8 +129,20 @@ namespace PetTravelDb.Controllers
             return View(pet);
         }
 
-        // GET: Pets/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind(new[] { "PetId,PetName,PetNotes,Breed,OwnerId,PetAge" })] Pet pet)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(pet);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(pet);
+        }
+
+        private async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -145,10 +158,6 @@ namespace PetTravelDb.Controllers
 
             return View(pet);
         }
-
-        // POST: Pets/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var pet = await _context.Pet.FindAsync(id);
@@ -167,3 +176,5 @@ namespace PetTravelDb.Controllers
         }
     }
 }
+    
+

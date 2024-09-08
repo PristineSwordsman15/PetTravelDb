@@ -120,8 +120,7 @@ namespace PetTravelDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(
-            int id, [Bind("AirlinesId,AirlinesName,AirlinesDescription")] Airlines airlines)
+        public async Task<IActionResult> Edit(int id, [Bind("AirlinesId,AirlinesName,AirlinesDescription")] Airlines airlines)
         { 
             {
                 if (!ModelState.IsValid)

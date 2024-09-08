@@ -45,7 +45,7 @@ namespace PetTravelDb.Controllers
 
             switch (SortOrder)
             {
-                case "FlightsID_desc":
+                case "FlightId_desc":
                     flightSearch = flightSearch.OrderByDescending(s => s.FlightsId);
                     break;
                 case "Origin_desc":
@@ -65,11 +65,7 @@ namespace PetTravelDb.Controllers
             }
             return View(await flightSearch.AsNoTracking().ToListAsync());
         }
-        public async Task<IActionResult> FlightSearch(string Flight) 
-        {
-            var searchFlight = _context.Flights.Where(F => F.BookingRefNo == Flight);
-            return View("Index", await searchFlight.ToListAsync());
-        }
+        
 
 
 

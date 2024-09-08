@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using PetTravelDb.Models;
 using PetTravelDb.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Identity.Client;
 
 namespace PetTravelDb.Controllers
 {
@@ -22,83 +23,119 @@ namespace PetTravelDb.Controllers
         }
 
         // GET: Owners
-        public async Task<IActionResult> Index(string searchOwner)
+         async Task<IActionResult> Index(string sortOrder, string searchString)
         {
+
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["CurrentFilter"] = searchString;
 
             var ownerSearch = from s in _context.Owner
                               select s;
-            if (!String.IsNullOrEmpty(searchOwner))
+
+            if (!String.IsNullOrEmpty(searchString))
             {
-                ownerSearch = ownerSearch.Where(s => s.LastName.Equals(searchOwner));
+                ownerSearch = ownerSearch.Where(s => s.FirstName.Contains(searchString));
+            }
+
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    ownerSearch = ownerSearch.OrderByDescending(s => s.FirstName);
+                    break;
+                case "LastName":
+                    ownerSearch = ownerSearch.OrderBy(s => s.LastName);
+                    break;
+                case "OwenrId":
+                    ownerSearch = ownerSearch.OrderByDescending(s => s.OwnerId);
+                    break;
+
+
+
             }
 
             return View(await ownerSearch.AsNoTracking().ToListAsync());
-        }
 
 
-        // GET: Owners/Details/5
+            // GET: Owners/Details/5
+            async Task<IActionResult> Details(int? id)
 
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
             {
-                return NotFound();
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var owner = await _context.Owner
+                    .FirstOrDefaultAsync(m => m.OwnerId == id);
+                if (owner == null)
+                {
+                    return NotFound();
+                }
+
+                return View(owner);
             }
 
-            var owner = await _context.Owner
-                .FirstOrDefaultAsync(m => m.OwnerId == id);
-            if (owner == null)
+
+            // GET: Owners/Create
+
+             IActionResult Create()
             {
-                return NotFound();
+                return View();
             }
 
-            return View(owner);
+            // GET: Owners/Edit/5
+            async Task<IActionResult> Edit(int? id)
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var owner = await _context.Owner.FindAsync(id);
+                if (owner == null)
+                {
+                    return NotFound();
+                }
+                return View(owner);
+            }
+
+            // GET: Owners/Delete/5
+             async Task<IActionResult> Delete(int? id)
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var owner = await _context.Owner
+                    .FirstOrDefaultAsync(m => m.OwnerId == id);
+                if (owner == null)
+                {
+                    return NotFound();
+                }
+
+                return View(owner);
+            }
         }
 
-
-        // GET: Owners/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Owners/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OwnerId,FirstName,LastName,FlightID,PhoneNumber,BookingRefNo,EmailAddress,Age")] Models.Owner owner)
+        private async Task<IActionResult> Create(OwnersController @this, [Bind(new[] { "OwnerId,FirstName,LastName,FlightId,PhoneNumber,BookingRefNo,EmailAddress,Age" })] Owner owner)
         {
-            if (ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 _context.Add(owner);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                await @this._context.SaveChangesAsync();
+                return @this.RedirectToAction(nameof(@this.Index));
             }
             return View(owner);
         }
 
-        // GET: Owners/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var owner = await _context.Owner.FindAsync(id);
-            if (owner == null)
-            {
-                return NotFound();
-            }
-            return View(owner);
-        }
-
-        // POST: Owners/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OwnerId,FirstName,LastName,FlightID,PhoneNumber,BookingRefNo,EmailAddress,Age")] Owner owner)
+        private async Task<IActionResult> Edit(int id, [Bind(new[] { "OwnerId,FirstName,LastName,FlightId,PhoneNumber,BookingRefNo,EmailAddress,Age" })] Owner owner)
         {
             if (id != owner.OwnerId)
             {
@@ -114,13 +151,13 @@ namespace PetTravelDb.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OwnerExists(owner.OwnerId))
+                    if (_context.OwnerExists == null)
                     {
-                        return NotFound();
+                        throw;
                     }
                     else
                     {
-                        throw;
+                        return NotFound();
                     }
                 }
                 return RedirectToAction(nameof(Index));
@@ -128,25 +165,6 @@ namespace PetTravelDb.Controllers
             return View(owner);
         }
 
-        // GET: Owners/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var owner = await _context.Owner
-                .FirstOrDefaultAsync(m => m.OwnerId == id);
-            if (owner == null)
-            {
-                return NotFound();
-            }
-
-            return View(owner);
-        }
-
-        // POST: Owners/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
