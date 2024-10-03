@@ -1,31 +1,32 @@
 ﻿@model IEnumerable<PetTravelDb.Models.Flights>
-<div style="background-color: mediumturquoise; backface-visibility: 0%">
+
 @{
-    ViewData["Title"] = "Flights";
+    ViewData["Title"] = "Index";
 }
 
-<h1>Flights</h1>
+<h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-    <form asp-action="FlightSearch"asp-controller="Flights">
-      
-
-        
-        
-            Search by BookingRefNo: &nbsp; 
-            <input type="text" name="Flight" />
-            <input type="submit" value="Filter" />
-        
-        
-    </form>
-
-</p>
-
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FlightNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BookingRefNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlightDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DepartureTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ArrivalTime)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Origin)
             </th>
@@ -39,7 +40,10 @@
                 @Html.DisplayNameFor(model => model.PetName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BookingRefNo)
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Airline)
             </th>
             <th></th>
         </tr>
@@ -47,6 +51,21 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlightNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BookingRefNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlightDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DepartureTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ArrivalTime)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Origin)
             </td>
@@ -60,7 +79,10 @@
                 @Html.DisplayFor(modelItem => item.PetName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.BookingRefNo)
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Airline.AirlinesDescription)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.FlightsId">Edit</a> |
@@ -71,4 +93,3 @@
 }
     </tbody>
 </table>
-</div>

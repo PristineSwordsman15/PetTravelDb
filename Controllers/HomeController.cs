@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PetTravelDb.Models;
 using System.Diagnostics;
+
 
 namespace PetTravelDb.Controllers
 {
@@ -18,7 +19,7 @@ namespace PetTravelDb.Controllers
             return View();
         }
 
-        public IActionResult Privacy ()
+        public IActionResult Privacy()
         {
             return View();
         }

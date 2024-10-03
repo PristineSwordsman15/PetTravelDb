@@ -1,21 +1,10 @@
 ﻿@model IEnumerable<PetTravelDb.Models.Pet>
 
-<div style="background-color: mediumturquoise; backface-visibility: 0%">
 @{
-    ViewData["Title"] = "Pets";
+    ViewData["Title"] = "Index";
 }
 
-<h1>Pets</h1>
-<p>
-    <a asp-action="Create">Create New</a>
-
-    <form asp-controller="Pets" asp-action="Index">
-        <p>
-            Search by : &nbsp; <input type="text" name="searchFlight" />
-            <input type="submit" value="Filter" />
-        </p>
-    </form>
-<p>
+<h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -30,10 +19,13 @@
                 @Html.DisplayNameFor(model => model.PetNotes)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Species)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Breed)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.OwnerId)
+                @Html.DisplayNameFor(model => model.Owner)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.PetAge)
@@ -51,10 +43,13 @@
                 @Html.DisplayFor(modelItem => item.PetNotes)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Species)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Breed)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.OwnerId)
+                @Html.DisplayFor(modelItem => item.Owner.FirstName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PetAge)

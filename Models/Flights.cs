@@ -14,7 +14,7 @@ namespace PetTravelDb.Models
         public string FlightNumber { get; set; }
         [Required, MaxLength(6)]
         public string BookingRefNo { get; set; }
-        
+        public DateTime? FlightDate { get; set; }
         public DateTime DepartureTime { get; set; }
 
         public DateTime ArrivalTime { get; set; }

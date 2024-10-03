@@ -2,140 +2,93 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using PetTravelDb.Models;
 using PetTravelDb.Data;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Identity.Client;
+using PetTravelDb.Models;
 
 namespace PetTravelDb.Controllers
 {
     [Authorize]
     public class OwnersController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly PetTravelDbContext _context;
 
-        public OwnersController(ApplicationDbContext context)
+        public OwnersController(PetTravelDbContext context)
         {
             _context = context;
         }
 
         // GET: Owners
-         async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index()
         {
-
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
-            ViewData["CurrentFilter"] = searchString;
-
-            var ownerSearch = from s in _context.Owner
-                              select s;
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                ownerSearch = ownerSearch.Where(s => s.FirstName.Contains(searchString));
-            }
-
-
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    ownerSearch = ownerSearch.OrderByDescending(s => s.FirstName);
-                    break;
-                case "LastName":
-                    ownerSearch = ownerSearch.OrderBy(s => s.LastName);
-                    break;
-                case "OwenrId":
-                    ownerSearch = ownerSearch.OrderByDescending(s => s.OwnerId);
-                    break;
-
-
-
-            }
-
-            return View(await ownerSearch.AsNoTracking().ToListAsync());
-
-
-            // GET: Owners/Details/5
-            async Task<IActionResult> Details(int? id)
-
-            {
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                var owner = await _context.Owner
-                    .FirstOrDefaultAsync(m => m.OwnerId == id);
-                if (owner == null)
-                {
-                    return NotFound();
-                }
-
-                return View(owner);
-            }
-
-
-            // GET: Owners/Create
-
-             IActionResult Create()
-            {
-                return View();
-            }
-
-            // GET: Owners/Edit/5
-            async Task<IActionResult> Edit(int? id)
-            {
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                var owner = await _context.Owner.FindAsync(id);
-                if (owner == null)
-                {
-                    return NotFound();
-                }
-                return View(owner);
-            }
-
-            // GET: Owners/Delete/5
-             async Task<IActionResult> Delete(int? id)
-            {
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                var owner = await _context.Owner
-                    .FirstOrDefaultAsync(m => m.OwnerId == id);
-                if (owner == null)
-                {
-                    return NotFound();
-                }
-
-                return View(owner);
-            }
+            return View(await _context.Owner.ToListAsync());
         }
 
+        // GET: Owners/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var owner = await _context.Owner
+                .FirstOrDefaultAsync(m => m.OwnerId == id);
+            if (owner == null)
+            {
+                return NotFound();
+            }
+
+            return View(owner);
+        }
+
+        // GET: Owners/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Owners/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        private async Task<IActionResult> Create(OwnersController @this, [Bind(new[] { "OwnerId,FirstName,LastName,FlightId,PhoneNumber,BookingRefNo,EmailAddress,Age" })] Owner owner)
+        public async Task<IActionResult> Create([Bind("OwnerId,FirstName,LastName,FlightId,PhoneNumber,BookingRefNo,EmailAddress,Age")] Owner owner)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _context.Add(owner);
-                await @this._context.SaveChangesAsync();
-                return @this.RedirectToAction(nameof(@this.Index));
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
             return View(owner);
         }
 
+        // GET: Owners/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var owner = await _context.Owner.FindAsync(id);
+            if (owner == null)
+            {
+                return NotFound();
+            }
+            return View(owner);
+        }
+
+        // POST: Owners/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        private async Task<IActionResult> Edit(int id, [Bind(new[] { "OwnerId,FirstName,LastName,FlightId,PhoneNumber,BookingRefNo,EmailAddress,Age" })] Owner owner)
+        public async Task<IActionResult> Edit(int id, [Bind("OwnerId,FirstName,LastName,FlightId,PhoneNumber,BookingRefNo,EmailAddress,Age")] Owner owner)
         {
             if (id != owner.OwnerId)
             {
@@ -151,13 +104,13 @@ namespace PetTravelDb.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (_context.OwnerExists == null)
+                    if (!OwnerExists(owner.OwnerId))
                     {
-                        throw;
+                        return NotFound();
                     }
                     else
                     {
-                        return NotFound();
+                        throw;
                     }
                 }
                 return RedirectToAction(nameof(Index));
@@ -165,6 +118,25 @@ namespace PetTravelDb.Controllers
             return View(owner);
         }
 
+        // GET: Owners/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var owner = await _context.Owner
+                .FirstOrDefaultAsync(m => m.OwnerId == id);
+            if (owner == null)
+            {
+                return NotFound();
+            }
+
+            return View(owner);
+        }
+
+        // POST: Owners/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

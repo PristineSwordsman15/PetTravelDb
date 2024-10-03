@@ -2,96 +2,53 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using PetTravelDb.Data;
 using PetTravelDb.Models;
 
-
-
 namespace PetTravelDb.Controllers
 {
-    [Authorize]
     public class FlightsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly PetTravelDbContext _context;
 
-        public FlightsController(ApplicationDbContext context)
+        public FlightsController(PetTravelDbContext context)
         {
             _context = context;
         }
 
         // GET: Flights
-        public async Task<IActionResult> Index(string SortOrder , string searchString)
+        public async Task<IActionResult> Index()
         {
-           
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(SortOrder) ? "name_desc" : "";
-            ViewData["DateSortParm"] = SortOrder == "Date" ? "date_desc" : "Date";
-            ViewData["CurrentFilter"] = searchString;
-
-
-            var flightSearch = from s in _context.Flights
-                               select s;
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                flightSearch = flightSearch.Where(s => s.BookingRefNo.Equals(searchString));
-            }
-
-
-            switch (SortOrder)
-            {
-                case "FlightId_desc":
-                    flightSearch = flightSearch.OrderByDescending(s => s.FlightsId);
-                    break;
-                case "Origin_desc":
-                   flightSearch = flightSearch.OrderBy(s => s.Origin);
-                    break;
-                case "Dest_dsec":
-                    flightSearch = flightSearch.OrderByDescending(s => s.Destination);
-                    break;
-                case "PetId":
-                    flightSearch = flightSearch.OrderByDescending(s => s.PetId);
-                    break;
-                case "PetName_desc":
-                    flightSearch = flightSearch.OrderByDescending(s => s.PetName);
-                    break;
-
-
-            }
-            return View(await flightSearch.AsNoTracking().ToListAsync());
+            var petTravelDbContext = _context.Flights.Include(f => f.Airline);
+            return View(await petTravelDbContext.ToListAsync());
         }
-        
-
-
-
-
 
         // GET: Flights/Details/5
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var flight = await _context.Flights
+            var flights = await _context.Flights
+                .Include(f => f.Airline)
                 .FirstOrDefaultAsync(m => m.FlightsId == id);
-            if (flight == null)
+            if (flights == null)
             {
                 return NotFound();
             }
 
-            return View(flight);
+            return View(flights);
         }
 
         // GET: Flights/Create
         public IActionResult Create()
         {
+            ViewData["AirlinesId"] = new SelectList(_context.Airlines, "AirlinesId", "AirlinesDescription");
             return View();
         }
 
@@ -100,15 +57,16 @@ namespace PetTravelDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FlightsId,Origin,Destination,PetId,PetName,BookingRefNo,Status")] Flights flight)
+        public async Task<IActionResult> Create([Bind("FlightsId,FlightNumber,BookingRefNo,FlightDate,DepartureTime,ArrivalTime,Origin,Destination,PetId,PetName,Status,AirlinesId")] Flights flights)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(flight);
+                _context.Add(flights);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(flight);
+            ViewData["AirlinesId"] = new SelectList(_context.Airlines, "AirlinesId", "AirlinesDescription", flights.AirlinesId);
+            return View(flights);
         }
 
         // GET: Flights/Edit/5
@@ -119,12 +77,13 @@ namespace PetTravelDb.Controllers
                 return NotFound();
             }
 
-            var flight = await _context.Flights.FindAsync(id);
-            if (flight == null)
+            var flights = await _context.Flights.FindAsync(id);
+            if (flights == null)
             {
                 return NotFound();
             }
-            return View(flight);
+            ViewData["AirlinesId"] = new SelectList(_context.Airlines, "AirlinesId", "AirlinesDescription", flights.AirlinesId);
+            return View(flights);
         }
 
         // POST: Flights/Edit/5
@@ -132,9 +91,9 @@ namespace PetTravelDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("FlightsId,Origin,Destination,PetId,PetName,BookingRefNo,Status")] Flights flight)
+        public async Task<IActionResult> Edit(int id, [Bind("FlightsId,FlightNumber,BookingRefNo,FlightDate,DepartureTime,ArrivalTime,Origin,Destination,PetId,PetName,Status,AirlinesId")] Flights flights)
         {
-            if (id != flight.FlightsId)
+            if (id != flights.FlightsId)
             {
                 return NotFound();
             }
@@ -143,12 +102,12 @@ namespace PetTravelDb.Controllers
             {
                 try
                 {
-                    _context.Update(flight);
+                    _context.Update(flights);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FlightsExists(flight.FlightsId))
+                    if (!FlightsExists(flights.FlightsId))
                     {
                         return NotFound();
                     }
@@ -159,7 +118,8 @@ namespace PetTravelDb.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(flight);
+            ViewData["AirlinesId"] = new SelectList(_context.Airlines, "AirlinesId", "AirlinesDescription", flights.AirlinesId);
+            return View(flights);
         }
 
         // GET: Flights/Delete/5
@@ -170,14 +130,15 @@ namespace PetTravelDb.Controllers
                 return NotFound();
             }
 
-            var flight = await _context.Flights
+            var flights = await _context.Flights
+                .Include(f => f.Airline)
                 .FirstOrDefaultAsync(m => m.FlightsId == id);
-            if (flight== null)
+            if (flights == null)
             {
                 return NotFound();
             }
 
-            return View(flight);
+            return View(flights);
         }
 
         // POST: Flights/Delete/5
@@ -185,10 +146,10 @@ namespace PetTravelDb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var flight = await _context.Flights.FindAsync(id);
-            if (flight != null)
+            var flights = await _context.Flights.FindAsync(id);
+            if (flights != null)
             {
-                _context.Flights.Remove(flight);
+                _context.Flights.Remove(flights);
             }
 
             await _context.SaveChangesAsync();

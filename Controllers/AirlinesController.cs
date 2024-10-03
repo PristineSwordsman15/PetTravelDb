@@ -14,49 +14,17 @@ namespace PetTravelDb.Controllers
     [Authorize]
     public class AirlinesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly PetTravelDbContext _context;
 
-        public AirlinesController(ApplicationDbContext context)
+        public AirlinesController(PetTravelDbContext context)
         {
             _context = context;
         }
 
         // GET: Airlines
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index()
         {
-
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
-            ViewData["CurrentFilter"] = searchString;
-
-            var AirlineSearch = from s in _context.Airlines
-                                select s;
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                AirlineSearch = AirlineSearch.Where(s => s.AirlinesName.Contains(searchString));
-            }
-
-
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    AirlineSearch = AirlineSearch.OrderByDescending(s => s.AirlinesName);
-                    break;
-                case "AirlineID":
-                    AirlineSearch = AirlineSearch.OrderBy(s => s.AirlinesDescription);
-                    break;
-                case "date_desc":
-                    AirlineSearch = AirlineSearch.OrderByDescending(s => s.AirlinesId);
-                    break;
-
-
-
-
-
-            }
-
-            return View(await AirlineSearch.AsNoTracking().ToListAsync());
+            return View(await _context.Airlines.ToListAsync());
         }
 
         // GET: Airlines/Details/5
@@ -88,9 +56,9 @@ namespace PetTravelDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AirlinesId,AirlinesName,AirlinesDescription")] Models.Airlines airlines)
+        public async Task<IActionResult> Create([Bind("AirlinesId,AirlinesName,AirlinesDescription")] Airlines airlines)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _context.Add(airlines);
                 await _context.SaveChangesAsync();
@@ -121,32 +89,33 @@ namespace PetTravelDb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("AirlinesId,AirlinesName,AirlinesDescription")] Airlines airlines)
-        { 
+        {
+            if (id != airlines.AirlinesId)
             {
-                if (!ModelState.IsValid)
-                {
-                    try
-                    {
-                        _context.Update(airlines);
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (DbUpdateConcurrencyException)
-                    {
-                        if(_context.Airlines == null)
-                        {
-                            return NotFound();
-                        }
-                        else
-                        {
-                            throw;
-                        }
-                    }
-                    return RedirectToAction(nameof(Index));
-                }
-                return View(airlines);
+                return NotFound();
             }
 
-            return NotFound();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(airlines);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AirlinesExists(airlines.AirlinesId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(airlines);
         }
 
         // GET: Airlines/Delete/5
@@ -158,7 +127,7 @@ namespace PetTravelDb.Controllers
             }
 
             var airlines = await _context.Airlines
-                .FirstOrDefaultAsync(m => m.AirlinesId== id);
+                .FirstOrDefaultAsync(m => m.AirlinesId == id);
             if (airlines == null)
             {
                 return NotFound();
